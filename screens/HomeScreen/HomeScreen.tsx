@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
+import { useFonts } from 'expo-font';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Image, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 // import { fetchWeatherForecast } from './api/fetchWeather';
 import { LinearGradient } from 'expo-linear-gradient';
 // import { RootStackParamList } from '../../App';
@@ -28,8 +29,26 @@ const StyledTouchableOpacity = styled(TouchableOpacity);
 >; */
 
 export const HomeScreen: React.FC = () => {
-  const [location, setLocation] = useState({});
+  const [showSearch, setShowSearch] = useState(false);
+  const [locations, setLocations] = useState([1, 2, 3]);
   const [hasError, setHasError] = useState(false);
+  const [fontsLoaded] = useFonts({
+    'SFPRODisplayRegular': require('../../assets/fonts/SFPRODisplayRegular.OTF'),
+  });
+
+  const handleLocation = (loc) => {
+    setLoading(true);
+    toggleSearch(false);
+    setLocations([]);
+    fetchWeatherForecast({
+      cityName: loc.name,
+      days: '7'
+    }).then(data=>{
+      setLoading(false);
+      setWeather(data);
+      storeData('city',loc.name);
+    })
+  };
 
   /* useEffect(() => {
     const loadData = async () => {
@@ -49,7 +68,7 @@ export const HomeScreen: React.FC = () => {
   }, [location]); */
 
   return (
-    <StyledView className={'flex-1 relative'} style={{ width: '100%', height: '100%' }}>
+    <StyledView className={'font-sfrprodisplay container flex-1 relative'} style={{ width: '100%', height: '100%' }}>
       <StatusBar style='light' />
       <LinearGradient
         colors={['#08244F', '#134CB5', '#0B42AB']}
@@ -63,48 +82,73 @@ export const HomeScreen: React.FC = () => {
             onPress={() => navigation?.navigate('Settings')}>
             <Text>London</Text>
           </TouchableOpacity> */}
-          <StyledView className={'flex-row justify-between items-center'}>
-            <StyledView>
-              <StyledTouchableOpacity
-                className={'flex-row items-center rounded-full p-3 m-1'}
+          <StyledView className={'flex-row justify-between items-center mt-4'}>
+            {showSearch ? (
+              <StyledView
+                className={'flex-row justify-end items-center rounded-full'}
+                style={{ backgroundColor: background.white(0.2) }}
               >
-                <Image
-                  source={ require('../../assets/icons/icon-geo.png') }
-                  style={{ width: 25, height: 25 }}
+                <StyledTextInput
+                  placeholder='Search a city'
+                  placeholderTextColor={'lightgray'}
+                  className={'pl-6 pb-1 flex-1 text-lg text-white'}
+                  style={{ height: 62 }}
                 />
 
-                <StyledText className={'ml-3 color-white'}>
-                  Kyiv
-                </StyledText>
+                <StyledTouchableOpacity
+                  onPress={()=> setShowSearch(!showSearch)} 
+                  className={'rounded-full p-3.5 mt-1 mb-1 mr-2'}
+                  style={{ backgroundColor: background.white(0.3) }}
+                >
+                  <Image
+                    source={ require('../../assets/icons/icon-search.png') }
+                    style={{ width: 20, height: 20 }}
+                  />
+                </StyledTouchableOpacity>
+              </StyledView>
+            ) : (
+              <StyledView>
+                <StyledTouchableOpacity
+                  onPress={()=> setShowSearch(!showSearch)} 
+                  className={'flex-row items-center rounded-full p-3 m-1'}
+                >
+                  <Image
+                    source={ require('../../assets/icons/icon-geo.png') }
+                    style={{ width: 25, height: 25 }}
+                  />
 
-                <Image
-                  source={ require('../../assets/icons/icon-arrow.png') }
-                  className={'ml-3'}
-                  style={{ width: 30, height: 30 }}
-                />
-              </StyledTouchableOpacity>
-            </StyledView>
+                  <StyledText className={'ml-3 text-lg font-bold color-white'} style={{ fontFamily: 'SFPRODisplayRegular' }}>
+                    Kyiv
+                  </StyledText>
 
-            {/* <StyledView
-              className={'flex-row justify-end items-center rounded-full'}
-              style={{ backgroundColor: background.white(0.2) }}
-            >
-              <StyledTextInput
-                placeholder='Search a city'
-                placeholderTextColor={'lightgray'}
-                className={'pl-6 h-10 pb-1 flex-1 text-base text-white'}
-              />
+                  <Image
+                    source={ require('../../assets/icons/icon-arrow.png') }
+                    className={'ml-3'}
+                    style={{ width: 30, height: 30 }}
+                  />
+                </StyledTouchableOpacity>
+              </StyledView>
+            )}
 
-              <StyledTouchableOpacity
-                className={'rounded-full p-3 m-1'}
-                style={{ backgroundColor: background.white(0.3) }}
-              >
-                <Image
-                  source={ require('../../assets/icons/icon-search.png') }
-                  style={{ width: 20, height: 20 }}
-                />
-              </StyledTouchableOpacity>
-            </StyledView> */}
+            {locations.length > 0 && showSearch && (
+                <View className="absolute w-full bg-gray-300 top-16 rounded-3xl ">
+                  {locations.map((loc, index)=>{
+                      let showBorder = index+1 != locations.length;
+                      let borderClass = showBorder? ' border-b-2 border-b-gray-400':'';
+                      return (
+                        <TouchableOpacity 
+                          key={index}
+                          onPress={()=> handleLocation(loc)} 
+                          className={"flex-row items-center border-0 p-3 px-4 mb-1 "+borderClass}>
+                            <MapPinIcon size="20" color="gray" />
+                            <Text className="text-black text-lg ml-2">{loc?.name}, {loc?.country}</Text>
+                        </TouchableOpacity>
+                      )
+                    })
+                  }
+                </View>
+              )
+            }
 
             <StyledView>
               <StyledTouchableOpacity
@@ -125,10 +169,6 @@ export const HomeScreen: React.FC = () => {
 
 /* const styles = StyleSheet.create({
   container: {
-    flex: 1,
-  },
-  background: {
-    width: '100%',
-    height: '100%',
+    fontFamily: 'SFPRODisplayRegular',
   },
 }); */
