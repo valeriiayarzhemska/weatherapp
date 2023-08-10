@@ -4,10 +4,9 @@
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
-    "webdev": "expo start --web",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web",
+    "dev": "expo start --web",
     "lint": "eslint --ext .tsx --ext .ts src/",
     "format": "prettier --check ./src"
   },
@@ -58,5 +57,10 @@
       "pre-commit": "lint-staged"
     }
   },
-  "private": true
+  "private": true,
+  "rnpm": {
+    "assets": [
+      "./assets/fonts/"
+    ]
+  }
 }

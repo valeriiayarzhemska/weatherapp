@@ -1,7 +1,8 @@
 import React from 'react';
+import { withExpoSnack } from 'nativewind';
 import { NavigationContainer } from '@react-navigation/native';
-import { HomeScreen } from './src/screens/HomeScreen/index';
-import { SettingsScreen } from './src/screens/SettingsScreen/index';
+import { HomeScreen } from './screens/HomeScreen/index';
+import { SettingsScreen } from './screens/SettingsScreen/index';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
@@ -19,7 +20,7 @@ const Settings = () => {
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
-export default function App() {
+const App = () => {
   return (
     <NavigationContainer>
       <RootStack.Navigator initialRouteName="Home">
@@ -33,3 +34,5 @@ export default function App() {
     </NavigationContainer>
   );
 }
+
+export default withExpoSnack(App);
