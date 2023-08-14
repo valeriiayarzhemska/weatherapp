@@ -1,21 +1,48 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import axios, { AxiosResponse } from 'axios';
-import { BASE_URL, API_KEY } from '../utils/constants/constants';
 
-/* const forecastEndpoint = (city: string, units: string): string =>
-  `${BASE_URL}/data/2.5/weather?q=${city}&units=${units}&appid=${api_key}`; */
+const baseURL = process.env.BASE_URL;
+const apiKey = process.env.API_KEY;
 
-const apiForecastCall = async (latitude: number, longitude: number, unit: string) => {
+/* const weatherEndpoint = (city: string, units: string): string =>
+  `${baseURL}/data/2.5/weather?q=${city}&units=${units}&appid=${apiKey}`;
+ */
+const apiWeatherCallLatLong = async (
+  latitude: number,
+  longitude: number,
+  unit: string,
+) => {
   try {
-    const response = await axios.get(`${BASE_URL}/data/3.0/onecall`, {
+    const response = await axios.get(`${baseURL}/data/3.0/onecall`, {
       params: {
         lat: latitude,
         lon: longitude,
-        appid: API_KEY,
+        appid: apiKey,
         units: unit,
       },
     });
-    console.log(API_KEY);
+
+    return {
+      cityName: response.data.name,
+      units: unit,
+    };
+  } catch (error) {
+    console.log('error: ', error);
+  }
+};
+
+const apiWeatherCallCity = async (
+  city: string,
+  unit: string,
+) => {
+  try {
+    const response = await axios.get(`${baseURL}/data/2.5/weather`, {
+      params: {
+        q: city,
+        appid: apiKey,
+        units: unit,
+      },
+    });
 
     return response.data;
   } catch (error) {
@@ -23,8 +50,20 @@ const apiForecastCall = async (latitude: number, longitude: number, unit: string
   }
 };
 
-export const fetchWeatherForecast = (latitude: number, longitude: number, unit: string) => {
-  // const forecastUrl = forecastEndpoint(city, units);
+export const fetchWeatherForSearch = async (
+  latitude: number,
+  longitude: number,
+  unit: string,
+) => {
+  const weatherDataByLatLong = await apiWeatherCallLatLong(
+    latitude,
+    longitude,
+    unit,
+  );
+  const weatherDataByCity = await apiWeatherCallCity(
+    weatherDataByLatLong.cityName,
+    unit,
+  );
 
-  return apiForecastCall(latitude, longitude, unit);
+  return weatherDataByCity;
 };

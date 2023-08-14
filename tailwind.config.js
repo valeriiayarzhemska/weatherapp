@@ -5,7 +5,14 @@ module.exports = {
     "./screens/HomeScreen/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'dark-blue': '#001026',
+      },
+      borderRadius: {
+        'medium': '20px',
+      }
+    },
   },
   plugins: [],
 }

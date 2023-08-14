@@ -1,8 +1,10 @@
 /* import axios, { AxiosResponse } from 'axios';
-import { BASE_URL, api_key } from '../utils/constants/constants';
+
+const baseURL = process.env.BASE_URL;
+const apiKey = process.env.API_KEY;
 
 const locationsEndpoint = (lat: number, lon: number, limit: number): string =>
-  `${BASE_URL}/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=${limit}&appid=${api_key}`;
+  `${baseURL}/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=${limit}&appid=${apiKey}`;
 
 const apiLocationCall = async (url: string): Promise<AxiosResponse<any>> => {
   try {
@@ -14,9 +16,10 @@ const apiLocationCall = async (url: string): Promise<AxiosResponse<any>> => {
   }
 };
 
-export const fetchWeatherForecast = (data) => {
+export const fetchWeatherForSearch = (data) => {
   const locationUrl = locationsEndpoint(lat, lon, limit);
 
   return apiLocationCall(locationUrl);
 };
-*/
+
+ */
