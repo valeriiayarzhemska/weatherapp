@@ -16,7 +16,7 @@ const apiLocationCall = async (url: string): Promise<AxiosResponse<any>> => {
   }
 };
 
-export const fetchWeatherForSearch = (data) => {
+export const fetchWeatherForecast = (data) => {
   const locationUrl = locationsEndpoint(lat, lon, limit);
 
   return apiLocationCall(locationUrl);

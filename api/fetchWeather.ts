@@ -1,44 +1,27 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import axios, { AxiosResponse } from 'axios';
 
-const baseURL = process.env.BASE_URL;
 const apiKey = process.env.API_KEY;
+const baseURL = process.env.BASE_URL;
+const searchURL = `${baseURL}/geo/1.0/direct`;
+const findByCityURL = `${baseURL}/data/2.5/weather`;
+const findByLatLonURL = `${baseURL}/data/2.5/forecast`;
 
-/* const weatherEndpoint = (city: string, units: string): string =>
-  `${baseURL}/data/2.5/weather?q=${city}&units=${units}&appid=${apiKey}`;
- */
+export interface Coords {
+  lon: number,
+  lat: number,
+}
+
 const apiWeatherCallLatLong = async (
-  latitude: number,
-  longitude: number,
-  unit: string,
-) => {
+  lat: number,
+  lon: number,
+  unit?: string,
+) => {  
   try {
-    const response = await axios.get(`${baseURL}/data/3.0/onecall`, {
+    const response = await axios.get(findByLatLonURL, {
       params: {
-        lat: latitude,
-        lon: longitude,
-        appid: apiKey,
-        units: unit,
-      },
-    });
-
-    return {
-      cityName: response.data.name,
-      units: unit,
-    };
-  } catch (error) {
-    console.log('error: ', error);
-  }
-};
-
-const apiWeatherCallCity = async (
-  city: string,
-  unit: string,
-) => {
-  try {
-    const response = await axios.get(`${baseURL}/data/2.5/weather`, {
-      params: {
-        q: city,
+        lat,
+        lon,
         appid: apiKey,
         units: unit,
       },
@@ -50,20 +33,41 @@ const apiWeatherCallCity = async (
   }
 };
 
-export const fetchWeatherForSearch = async (
-  latitude: number,
-  longitude: number,
-  unit: string,
+const apiWeatherCallCity = async (params, url) => {
+  const { city, unit, limit } = params;
+
+  try {
+    const response = await axios.get(url, {
+      params: {
+        q: city,
+        appid: apiKey,
+        units: unit,
+        limit,
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.log('error: ', error);
+  }
+};
+
+export const fetchWeatherForecast = async (
+  lat: number,
+  lon: number,
+  unit?: string,
 ) => {
   const weatherDataByLatLong = await apiWeatherCallLatLong(
-    latitude,
-    longitude,
+    lat,
+    lon,
     unit,
   );
-  const weatherDataByCity = await apiWeatherCallCity(
-    weatherDataByLatLong.cityName,
-    unit,
-  );
+
+  return weatherDataByLatLong;
+};
+
+export const fetchWeatherForSearch = async (params) => {
+  const weatherDataByCity = await apiWeatherCallCity({ ...params, limit: 5 }, searchURL);
 
   return weatherDataByCity;
 };
