@@ -6,6 +6,7 @@ const baseURL = process.env.BASE_URL;
 const searchURL = `${baseURL}/geo/1.0/direct`;
 const findByCityURL = `${baseURL}/data/2.5/weather`;
 const findByLatLonURL = `${baseURL}/data/2.5/forecast`;
+const findByLatLonForecastURL = `${baseURL}/data/2.5/forecast`;
 
 export interface Coords {
   lon: number,
