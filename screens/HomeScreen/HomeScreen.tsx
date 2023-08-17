@@ -23,7 +23,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 // import { useNavigation } from '@react-navigation/native';
 import { styled } from 'nativewind';
 import { WeatherData } from '../../types/WeatherData';
-import { weekDays, weatherImages } from '../../constants/constants';
+import { forecastDays, todaysDate, weatherImages } from '../../constants/constants';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -50,10 +50,8 @@ export const HomeScreen: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
-  const dayInAWeek = new Date().getDay();
-  const forecastDays = weekDays
-    .slice(dayInAWeek, weekDays.length)
-    .concat(weekDays.slice(0, dayInAWeek));
+  let forecastDaysIndex = -1;
+  let minForecastTemp;
 
   const handleSearch = (cityName: string) => {
     setLocations([]);
@@ -293,7 +291,7 @@ export const HomeScreen: React.FC = () => {
               </StyledView>
             </StyledView>
 
-            <StyledView className={'flex justify-around items-center mt-5 mx-9 mb-4'}>
+            <StyledView className={'flex justify-around items-center my-5 mx-9'}>
               <StyledView className={'flex-column justify-center items-center mb-6 w-32 h-32'}>
                 <Image
                   source={
@@ -365,9 +363,9 @@ export const HomeScreen: React.FC = () => {
               </StyledView>
             </StyledView>
 
-            <StyledView className={'mb-2 mx-9 py-3 space-y-3 bg-dark-blue/30 rounded-medium'}>
+            <StyledView className={'mb-5 mx-9 py-3 space-y-3 bg-dark-blue/30 rounded-medium'}>
               <StyledView className={'flex-row justify-between mx-5 space-x-2'}>
-                <StyledText className={'font-bold text-lg text-white'}>Today</StyledText>
+                <StyledText className={'font-bold text-xl text-white'}>Today</StyledText>
 
                 <StyledText className={'text-lg text-white'}>{getDateFromString(weather.list[0].dt_txt)}</StyledText>
               </StyledView>
@@ -416,53 +414,68 @@ export const HomeScreen: React.FC = () => {
               </ScrollView>
             </StyledView>
 
-            <StyledView className={'mb-2 mx-9 py-3 space-y-3 bg-dark-blue/30 rounded-medium'}>
+            <StyledView className={'mb-5 mx-9 py-3 space-y-3 bg-dark-blue/30 rounded-medium'}>
               <StyledView className={'flex-row justify-between mx-5 space-x-2'}>
-                <StyledText className={'font-bold text-lg text-white'}>Today</StyledText>
+                <StyledText className={'font-bold text-xl text-white'}>Next Forecast</StyledText>
 
-                <StyledText className={'text-lg text-white'}>{getDateFromString(weather.list[0].dt_txt)}</StyledText>
+                <Image
+                  source={require('../../assets/icons/icon-calendar.png')}
+                  className={'w-6 h-6'}
+                />
               </StyledView>
 
               <ScrollView
-                
-                contentContainerStyle={{ paddingHorizontal: 15 }}
+                contentContainerStyle={{ paddingHorizontal: 20 }}
                 showsHorizontalScrollIndicator={false}
-                className={'space-x-3'}
               >
-                {weather.list.slice(0, 9).map((item, index) => {
-                  const datetimeString = item.dt_txt;                
-                  const timeArray = datetimeString.split(' ')[1].split(':');
-                  const timePortion = timeArray[0] + ':' + timeArray[1];
-                  const firstChild = index === 0;
+                {weather.list.map((item, index) => {
+                  let datetimeString = todaysDate();                
+                  const datetimeStringPart = item.dt_txt.split(' ');
 
-                  return (
-                    <StyledView
-                      key={index}
-                      className={cn(
-                        'flex justify-center items-center space-y-7 p-3 w-container rounded-3xl',
-                        {'bg-medium-blue/20 border border-border-blue': firstChild},
-                      )}
-                    >
-                      <StyledText className={'text-lg text-white'}>
-                        {Math.round(item.main.temp)}&#176;
-                      </StyledText>
+                  if (datetimeString !== datetimeStringPart[0]
+                  && datetimeStringPart[1] === '00:00:00') {
+                    minForecastTemp = Math.round(item.main.temp_min);
+                  }
 
-                      <StyledView className={'w-9 h-9'}>
-                        <Image
-                          source={
-                            weatherImages[
-                              item.weather[0].description || 'else'
-                            ]
-                          }
-                          className={'w-full h-full'}
-                        />
+                  if (datetimeString !== datetimeStringPart[0]
+                  && datetimeStringPart[1] === '15:00:00') {
+                    datetimeString = datetimeStringPart[0];
+                    forecastDaysIndex += 1;
+
+                    return (
+                      <StyledView
+                        key={index}
+                        className={'flex-row justify-between items-center py-4'}
+                      >
+                        <StyledText className={'font-bold text-lg text-white'}>
+                          {forecastDays[forecastDaysIndex]}
+                        </StyledText>
+
+                        <StyledView className={'flex-row justify-between items-center'}>
+                          <StyledView className={'w-7 h-7'}>
+                            <Image
+                              source={
+                                weatherImages[
+                                  item.weather[0].description || 'else'
+                                ]
+                              }
+                              className={'w-full h-full'}
+                            />
+                          </StyledView>
+
+                          <StyledView className={'flex-row ml-20 w-container'}>
+                            <StyledText className={'text-lg text-white'}>
+                              {Math.ceil(item.main.temp_max)}&#176;
+                            </StyledText>
+
+                            <StyledText className={'text-lg text-white/50 ml-2.5'}>
+                              {minForecastTemp}&#176;
+                            </StyledText>
+                          </StyledView>
+                        </StyledView>
                       </StyledView>
-
-                      <StyledText className={'text-lg text-white'}>
-                        {timePortion}
-                      </StyledText>
-                    </StyledView>
-                  );
+                    );
+                  }
                 })}
               </ScrollView>
             </StyledView>

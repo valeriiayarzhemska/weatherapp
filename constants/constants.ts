@@ -1,4 +1,21 @@
-export const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const dayInAWeek = new Date().getDay();
+export const forecastDays = weekDays
+  .slice(dayInAWeek, weekDays.length)
+  .concat(weekDays.slice(0, dayInAWeek));
+const today = new Date();
+const year = today.getFullYear();
+const month = today.getMonth() + 1;
+const day = today.getDate();
+export const todaysDate = () => {
+  let updatedMonth = month.toString();
+
+  if (updatedMonth.length < 2) {
+    updatedMonth = '0' + updatedMonth;
+  }
+
+  return `${year}-${updatedMonth}-${day}`;
+};
 
 export const weatherImages = {
   'thunderstorm with light rain': require('../assets/images/thunderstorm.png'),
