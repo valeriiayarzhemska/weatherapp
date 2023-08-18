@@ -54,6 +54,10 @@ export const HomeScreen: React.FC = () => {
   let forecastDaysIndex = -1;
   let minForecastTemp;
 
+  const handleRefresh = () => {
+    window.location.reload();
+  }
+
   const handleSearch = (cityName: string) => {
     setLocations([]);
 
@@ -104,6 +108,8 @@ export const HomeScreen: React.FC = () => {
   const handleTextDebounce = useCallback(debounce(handleSearch, 1200), []);
 
   useEffect(() => {
+    setIsLoading(true);
+
     const loadData = async () => {
       const usersLat = Number(getData('usersLat'));
       const usersLon = Number(getData('usersLon'));
@@ -153,17 +159,24 @@ export const HomeScreen: React.FC = () => {
         style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
       />
 
-      {isLoading || !weather && (
+      {isLoading && (
         <StyledView className={'flex flex-1 justify-around items-center'}>
           <ActivityIndicator size="large" color='#2566A3' />
         </StyledView>
       )}
 
-      {hasError && !isLoading && (
-        <StyledView>
-          <StyledText>
-            Error
+      {hasError && (
+        <StyledView className={'flex flex-1 justify-center items-center'}>
+          <StyledText className={'mb-4 text-xl font-bold text-white'}>
+            Sorry, something went wrong
           </StyledText>
+
+          <StyledPressable onPress={handleRefresh}>
+            <Image
+              source={require('../../assets/icons/icon-refresh.png')}
+              style={{ width: 25, height: 25 }}
+            />
+          </StyledPressable>
         </StyledView>
       )} 
 
@@ -349,7 +362,11 @@ export const HomeScreen: React.FC = () => {
               </StyledView>
             </StyledView>
 
-            <StyledView className={'mb-5 mx-9 py-3 space-y-3 bg-dark-blue/30 rounded-medium'}>
+            <StyledView className={cn(
+                'mb-5 mx-9 py-3 space-y-3 rounded-medium',
+                { 'bg-light-blue/30': !timeCheck },
+                { 'bg-dark-blue/30': timeCheck },
+              )}>
               <StyledView className={'flex-row justify-between mx-5 space-x-2'}>
                 <StyledText className={'font-bold text-xl text-white'}>Today</StyledText>
 
@@ -373,7 +390,8 @@ export const HomeScreen: React.FC = () => {
                       key={index}
                       className={cn(
                         'flex justify-center items-center space-y-7 p-3 w-container rounded-3xl',
-                        {'bg-medium-blue/20 border border-border-blue': firstChild},
+                        {'bg-medium-blue-bg/20 border border-border-blue': firstChild && timeCheck},
+                        {'bg-light-blue-bg/20 border border-border-blue-light': firstChild && !timeCheck},
                       )}
                     >
                       <StyledText className={'text-lg text-white'}>
@@ -400,7 +418,11 @@ export const HomeScreen: React.FC = () => {
               </ScrollView>
             </StyledView>
 
-            <StyledView className={'mb-5 mx-9 py-3 space-y-3 bg-dark-blue/30 rounded-medium'}>
+            <StyledView className={cn(
+                'mb-5 mx-9 py-3 space-y-3 rounded-medium',
+                { 'bg-light-blue/30': !timeCheck },
+                { 'bg-dark-blue/30': timeCheck },
+              )}>
               <StyledView className={'flex-row justify-between mx-5 space-x-2'}>
                 <StyledText className={'font-bold text-xl text-white'}>Next Forecast</StyledText>
 
