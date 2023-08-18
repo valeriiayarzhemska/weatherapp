@@ -12,6 +12,7 @@ module.exports = {
       colors: {
         'dark-blue': '#001026',
         'medium-blue': '#2566A3',
+        'light-blue': '#104084',
         'border-blue': '#5096FF',
       },
       borderRadius: {

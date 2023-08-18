@@ -13,6 +13,7 @@ import {
   Pressable,
   View,
   ScrollView,
+  ActivityIndicator,
 } from 'react-native';
 import {
   fetchWeatherForSearch,
@@ -23,7 +24,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 // import { useNavigation } from '@react-navigation/native';
 import { styled } from 'nativewind';
 import { WeatherData } from '../../types/WeatherData';
-import { forecastDays, todaysDate, weatherImages } from '../../constants/constants';
+import { forecastDays, timeCheck, todaysDate, weatherImages } from '../../constants/constants';
 
 const StyledView = styled(View);
 const StyledText = styled(Text);
@@ -55,7 +56,6 @@ export const HomeScreen: React.FC = () => {
 
   const handleSearch = (cityName: string) => {
     setLocations([]);
-    console.log('handleSearch');
 
     if (cityName && cityName.length > 2) {
       const loadWeatherSearchData = async () => {
@@ -63,9 +63,7 @@ export const HomeScreen: React.FC = () => {
           const weatherSearchData = await fetchWeatherForSearch({
             city: cityName,
           });
-          console.log(weatherSearchData);
           setLocations(weatherSearchData);
-          console.log(locations);
         } catch {
           setHasError(true);
         } finally {
@@ -81,17 +79,14 @@ export const HomeScreen: React.FC = () => {
     setIsLoading(true);
     setShowSearch(false);
     setLocations([]);
-    console.log('handleLocation');
 
     const loadWeatherData = async () => {
       const { lat, lon } = location;
-      console.log('loadWeatherData');
 
       try {
         const weatherData = await fetchWeatherForecast(lat, lon, 'metric');
         console.log(weatherData);
         setWeather(weatherData);
-        console.log(weather.city.name);
         storeData('usersLat', lat);
         storeData('usersLon', lon);
       } catch {
@@ -114,7 +109,6 @@ export const HomeScreen: React.FC = () => {
       const usersLon = Number(getData('usersLon'));
       const latKyiv = 50.4333;
       const lonKyiv = 30.5167;
-      console.log('loadData');
 
       try {
         if (usersLat && usersLon) {
@@ -131,7 +125,6 @@ export const HomeScreen: React.FC = () => {
             lonKyiv,
             'metric',
           );
-          console.log(locationKyiv);
 
           setWeather(locationKyiv);
         }
@@ -147,8 +140,6 @@ export const HomeScreen: React.FC = () => {
     loadData();
   }, []);
 
-  console.log(weather)
-
   return (
     <StyledView
       className={'font-sfrprodisplay container flex-1 relative'}
@@ -156,34 +147,25 @@ export const HomeScreen: React.FC = () => {
     >
       <StatusBar style='light' />
       <LinearGradient
-        colors={['#08244F', '#134CB5', '#0B42AB']}
+        colors={timeCheck ? ['#08244F', '#134CB5', '#0B42AB'] : ['#29B2DD', '#33AADD', '#2DC8EA']}
         start={[0, 0]}
         end={[1, 1]}
         style={{ position: 'absolute', left: 0, right: 0, top: 0, bottom: 0 }}
       />
 
-      {isLoading && (
-        <StyledView>
-          <StyledText>
-            Loading...
-          </StyledText>
+      {isLoading || !weather && (
+        <StyledView className={'flex flex-1 justify-around items-center'}>
+          <ActivityIndicator size="large" color='#2566A3' />
         </StyledView>
       )}
 
-      {hasError && (
+      {hasError && !isLoading && (
         <StyledView>
           <StyledText>
             Error
           </StyledText>
         </StyledView>
-      )}
-      {!weather && (
-        <StyledView>
-          <StyledText>
-            No data
-          </StyledText>
-        </StyledView>
-      )}   
+      )} 
 
       {weather && !isLoading && !hasError && (
         <SafeAreaView className={'flex flex-1'}>
@@ -324,7 +306,11 @@ export const HomeScreen: React.FC = () => {
                 </Text>
               </StyledView>
 
-              <StyledView className={'flex-row justify-between mx-5 px-4 w-full h-12 bg-dark-blue/30 rounded-medium'}>
+              <StyledView className={cn(
+                'flex-row justify-between mx-5 px-4 w-full h-12 rounded-medium',
+                { 'bg-light-blue/30': !timeCheck },
+                { 'bg-dark-blue/30': timeCheck },
+              )}>
                 <StyledView className={'flex-row space-x-1.5 items-center'}>
                   <Image
                     source={require('../../assets/icons/icon-rain.png')}
