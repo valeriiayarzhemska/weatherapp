@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
 import cn from 'classnames';
+import Animated, { FadeInRight, FadeInUp, FadeOutLeft, FadeOutUp, SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 import { getData, storeData } from '../../utils/asyncStorage';
 import { getDateFromString } from '../../utils/helpers';
 
@@ -25,26 +26,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { styled } from 'nativewind';
 import { WeatherData } from '../../types/WeatherData';
 import { forecastDays, timeCheck, todaysDate, weatherImages } from '../../constants/constants';
+import { HomeProps } from '../../types/Navigation';
 
-const StyledView = styled(View);
-const StyledText = styled(Text);
-const StyledTextInput = styled(TextInput);
-const StyledPressable = styled(Pressable);
+export const StyledView = styled(View);
+export const StyledText = styled(Text);
+export const StyledTextInput = styled(TextInput);
+export const StyledPressable = styled(Pressable);
 
-// Define the type for the navigation prop in the HomeScreen component
-// type HomeScreenNavigationProp = ReturnType<typeof useNavigation>;
-
-// Define the props for the HomeScreen component
-/* type HomeScreenProps = {
-  navigation: HomeScreenNavigationProp;
-}; */
-
-/* type ProfileScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'Home'
->; */
-
-export const HomeScreen: React.FC = () => {
+export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
   const [showSearch, setShowSearch] = useState(false);
   const [locations, setLocations] = useState([]);
@@ -148,7 +137,7 @@ export const HomeScreen: React.FC = () => {
 
   return (
     <StyledView
-      className={'font-sfrprodisplay container flex-1 relative'}
+      className={'flex-1 relative'}
       style={{ width: '100%', height: '100%' }}
     >
       <StatusBar style='light' />
@@ -184,18 +173,16 @@ export const HomeScreen: React.FC = () => {
         <SafeAreaView className={'flex flex-1'}>
           <ScrollView>
             <StyledView className={'mx-5 relative z-50'}>
-              {/* <Pressable
-                onPress={() => navigation?.navigate('Settings')}>
-                <Text>London</Text>
-              </Pressable> */}
               <StyledView
                 className={'flex-row justify-between items-center mt-4'}
               >
                 {showSearch ? (
-                  <StyledView
+                  <Animated.View
                     className={
                       'flex-row justify-end items-center w-full rounded-full bg-white'
                     }
+                    entering={SlideInRight}
+                    exiting={SlideOutLeft}
                   >
                     <StyledPressable
                       onPress={() => setShowSearch(!showSearch)}
@@ -214,7 +201,7 @@ export const HomeScreen: React.FC = () => {
                       className={'pl-2 flex-1 text-lg text-black'}
                       style={{ height: 62 }}
                     />
-                  </StyledView>
+                  </Animated.View>
                 ) : (
                   <>
                     <StyledView>
@@ -242,7 +229,12 @@ export const HomeScreen: React.FC = () => {
                     </StyledView>
 
                     <StyledView>
-                      <StyledPressable className={'flex rounded-full p-3 m-1'}>
+                      <StyledPressable 
+                        className={'flex rounded-full p-3 m-1'}
+                        onPress={() =>
+                          navigation.push('Settings')
+                        }
+                      >
                         <Image
                           source={require('../../assets/icons/settings.png')}
                           style={{ width: 22, height: 22 }}

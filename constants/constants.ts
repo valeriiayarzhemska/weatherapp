@@ -19,6 +19,8 @@ export const todaysDate = () => {
   return `${year}-${updatedMonth}-${day}`;
 };
 
+const =
+
 export const weatherImages = {
   'thunderstorm with light rain': require('../assets/images/thunderstorm.png'),
   'thunderstorm with rain': require('../assets/images/thunderstorm.png'),
@@ -41,7 +43,7 @@ export const weatherImages = {
   'shower drizzle': require('../assets/images/drizzle.png'),
   'light rain': require('../assets/images/light_rain.png'),
   'moderate rain': require('../assets/images/light_rain.png'),
-  'heavy intensity rain': require(`../assets/images/heavy_intensity_rain${timeCheck ? '_night' : ''}.png`),
+  'heavy intensity rain': require(`../assets/images/.png`),
   'very heavy rain': require(`../assets/images/heavy_intensity_rain${timeCheck ? '_night' : ''}.png`),
   'extreme rain': require(`../assets/images/heavy_intensity_rain${timeCheck ? '_night' : ''}.png`),
   'freezing rain': require(`../assets/images/heavy_intensity_rain${timeCheck ? '_night' : ''}.png`),

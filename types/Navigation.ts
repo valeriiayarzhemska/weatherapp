@@ -1,4 +1,4 @@
-/* 
+
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -12,9 +12,10 @@ export type RootStackParamList = {
 
 export const RootStack = createNativeStackNavigator<RootStackParamList>();
 
-// export type Props = NativeStackScreenProps<RootStackParamList, 'Settings'>;
+export type HomeProps = NativeStackScreenProps<RootStackParamList, 'Home'>;
+export type SettingsProps = NativeStackScreenProps<RootStackParamList, 'Settings'>;
 
-type ProfileScreenNavigationProp = Props['navigation'];
+/* type ProfileScreenNavigationProp = Props['navigation'];
 
-type ProfileScreenRouteProp = Props['route'];
- */
+type ProfileScreenRouteProp = Props['route']; */
+
