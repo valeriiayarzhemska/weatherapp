@@ -3,7 +3,7 @@ import { debounce } from 'lodash';
 import cn from 'classnames';
 import Animated, { FadeInRight, FadeInUp, FadeOutLeft, FadeOutUp, SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 import { getData, storeData } from '../../utils/asyncStorage';
-import { getDateFromString } from '../../utils/helpers';
+import { getDateFromString, getWeatherImage } from '../../utils/helpers';
 
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -21,11 +21,14 @@ import {
   fetchWeatherForecast,
 } from '../../api/fetchWeather';
 import { LinearGradient } from 'expo-linear-gradient';
-// import { RootStackParamList } from '../../App';
-// import { useNavigation } from '@react-navigation/native';
 import { styled } from 'nativewind';
 import { WeatherData } from '../../types/WeatherData';
-import { forecastDays, timeCheck, todaysDate, weatherImages } from '../../constants/constants';
+import {
+  forecastDays,
+  timeCheck,
+  todaysDate,
+  weatherImages
+} from '../../constants/constants';
 import { HomeProps } from '../../types/Navigation';
 
 export const StyledView = styled(View);
@@ -35,6 +38,7 @@ export const StyledPressable = styled(Pressable);
 
 export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
+  const [weatherImage, setWeatherImage] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [locations, setLocations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -281,11 +285,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
             <StyledView className={'flex justify-around items-center my-5 mx-9'}>
               <StyledView className={'flex-column justify-center items-center mb-6 w-32 h-32'}>
                 <Image
-                  source={
-                    weatherImages[
-                      weather.list[0].weather[0].description || 'else'
-                    ]
-                  }
+                  source={weatherImages[getWeatherImage(weather.list[0].weather[0].description || 'else')]}
                   className={'w-full h-full'}
                 />
               </StyledView>
@@ -392,11 +392,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
 
                       <StyledView className={'w-9 h-9'}>
                         <Image
-                          source={
-                            weatherImages[
-                              item.weather[0].description || 'else'
-                            ]
-                          }
+                          source={weatherImages[getWeatherImage(item.weather[0].description || 'else')]}
                           className={'w-full h-full'}
                         />
                       </StyledView>
@@ -454,11 +450,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                         <StyledView className={'flex-row justify-between items-center'}>
                           <StyledView className={'w-7 h-7'}>
                             <Image
-                              source={
-                                weatherImages[
-                                  item.weather[0].description || 'else'
-                                ]
-                              }
+                              source={weatherImages[getWeatherImage(item.weather[0].description || 'else')]}
                               className={'w-full h-full'}
                             />
                           </StyledView>
