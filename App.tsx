@@ -5,7 +5,6 @@ import { HomeScreen } from './screens/HomeScreen/index';
 import { SettingsScreen } from './screens/SettingsScreen/index';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { RootStackParamList } from './types/Navigation';
-import { Header } from './components/Header';
 
 /* const Home = () => {
   return <HomeScreen />;
@@ -20,7 +19,7 @@ const RootStack = createNativeStackNavigator<RootStackParamList>();
 const App = () => {
   return (
     <NavigationContainer>
-      <RootStack.Navigator initialRouteName="Home">
+      <RootStack.Navigator initialRouteName="Settings">
         <RootStack.Screen
           name="Home"
           component={HomeScreen}

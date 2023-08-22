@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
 import cn from 'classnames';
-import Animated, { FadeInRight, FadeInUp, FadeOutLeft, FadeOutUp, SlideInRight, SlideOutLeft } from 'react-native-reanimated';
+// import Animated, { FadeInRight, FadeInUp, FadeOutLeft, FadeOutUp, SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 import { getData, storeData } from '../../utils/asyncStorage';
-import { getDateFromString, getWeatherImage } from '../../utils/helpers';
+import { getDateFromString, getUnits, getWeatherImage } from '../../utils/helpers';
 
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -104,8 +104,9 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
     setIsLoading(true);
 
     const loadData = async () => {
-      const usersLat = Number(getData('usersLat'));
-      const usersLon = Number(getData('usersLon'));
+      const usersLat = await Number(getData('usersLat'));
+      const usersLon = await Number(getData('usersLon'));
+      const usersUnits = await getUnits();
       const latKyiv = 50.4333;
       const lonKyiv = 30.5167;
 
@@ -114,7 +115,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
           const location = await fetchWeatherForecast(
             usersLat,
             usersLon,
-            'metric',
+            usersUnits,
           );
           console.log(location);
           setWeather(location);
@@ -122,7 +123,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
           const locationKyiv = await fetchWeatherForecast(
             latKyiv,
             lonKyiv,
-            'metric',
+            usersUnits,
           );
 
           setWeather(locationKyiv);
@@ -181,12 +182,10 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                 className={'flex-row justify-between items-center mt-4'}
               >
                 {showSearch ? (
-                  <Animated.View
+                  <StyledView
                     className={
                       'flex-row justify-end items-center w-full rounded-full bg-white'
                     }
-                    entering={SlideInRight}
-                    exiting={SlideOutLeft}
                   >
                     <StyledPressable
                       onPress={() => setShowSearch(!showSearch)}
@@ -205,7 +204,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                       className={'pl-2 flex-1 text-lg text-black'}
                       style={{ height: 62 }}
                     />
-                  </Animated.View>
+                  </StyledView>
                 ) : (
                   <>
                     <StyledView>
@@ -282,7 +281,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
               </StyledView>
             </StyledView>
 
-            <StyledView className={'flex justify-around items-center my-5 mx-9'}>
+            <StyledView className={'flex justify-around items-center mt-2 mb-5 mx-9'}>
               <StyledView className={'flex-column justify-center items-center mb-6 w-32 h-32'}>
                 <Image
                   source={weatherImages[getWeatherImage(weather.list[0].weather[0].description || 'else')]}

@@ -1,4 +1,5 @@
 import { nightImages, timeCheck } from '../constants/constants';
+import { getData } from './asyncStorage';
 
 export const getDateFromString = (date: string) => {
   const dateObject = new Date(date);
@@ -20,3 +21,9 @@ export const getWeatherImage = (description: string) => {
   
   return weatherImage;
 };
+
+export const getUnits = async () => {
+  const units = await getData('usersUnits');
+  
+  return units.length > 1 ? units : 'metric';
+}
