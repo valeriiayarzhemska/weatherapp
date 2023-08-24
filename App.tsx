@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { withExpoSnack } from 'nativewind';
 import { NavigationContainer } from '@react-navigation/native';
 import { HomeScreen } from './screens/HomeScreen/index';
@@ -17,20 +17,24 @@ const Settings = () => {
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 const App = () => {
+  const [selectedId, setSelectedId] = useState<string | undefined>('2');
+
   return (
     <NavigationContainer>
-      <RootStack.Navigator initialRouteName="Settings">
+      <RootStack.Navigator initialRouteName='Settings'>
         <RootStack.Screen
-          name="Home"
+          name='Home'
           component={HomeScreen}
           options={{ headerShown: false }}
         />
         <RootStack.Screen
-          name="Settings"
-          component={SettingsScreen} 
+          name='Settings'
+          component={SettingsScreen}
           options={{
             headerShown: false,
           }}
+          selectedId={selectedId}
+          setSelectedId={setSelectedId}
         />
       </RootStack.Navigator>
     </NavigationContainer>

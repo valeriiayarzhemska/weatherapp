@@ -4,14 +4,20 @@ import { Image, SafeAreaView, ScrollView } from 'react-native';
 import { RadioButton, RadioButtonProps } from 'react-native-radio-buttons-group';
 import cn from 'classnames';
 
-import { SettingsProps } from '../../types/Navigation';
 import { LinearGradient } from 'expo-linear-gradient';
 import { timeCheck } from '../../constants/constants';
 import { StyledPressable, StyledText, StyledView } from '../HomeScreen';
 import { storeData } from '../../utils/asyncStorage';
+import { SettingsScreenProps } from '../../types/Settings';
 
-export const SettingsScreen: React.FC<SettingsProps> = ({ navigation }) => {
-  const [selectedId, setSelectedId] = useState<string | undefined>();
+
+
+export const SettingsScreen: React.FC<SettingsScreenProps> = (props) => {
+  const {
+    navigation,
+    selectedId,
+    setSelectedId,
+  } = props;
 
   const radioButtons: RadioButtonProps[] = useMemo(
     () => [
@@ -76,12 +82,12 @@ export const SettingsScreen: React.FC<SettingsProps> = ({ navigation }) => {
 
             <StyledView
               className={cn(
-                'flex-column items-start mx-5 px-4 rounded-medium',
+                'flex-column items-start mx-5 py-3 px-5 rounded-medium',
                 { 'bg-light-blue/30': !timeCheck },
                 { 'bg-dark-blue/30': timeCheck },
               )}
             >
-              <StyledText className={'font-bold text-xl text-white'}>
+              <StyledText className={'mb-1 font-bold text-xl text-white'}>
                 Units
               </StyledText>
 
@@ -91,6 +97,11 @@ export const SettingsScreen: React.FC<SettingsProps> = ({ navigation }) => {
                   onPress={() => handleSelection(button.id, button.value)}
                   key={button.id}
                   selected={button.id === selectedId}
+                  containerStyle={{ 'display': 'flex', 'gap': 5 }}
+                  borderSize={1}
+                  borderColor={'#2566A3'}
+                  color={'#2566A3'}
+                  labelStyle={{ 'color': '#fff', 'fontSize': 18 }}
                 />
               ))}
             </StyledView>

@@ -38,7 +38,6 @@ export const StyledPressable = styled(Pressable);
 
 export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
   const [weather, setWeather] = useState<WeatherData | null>(null);
-  const [weatherImage, setWeatherImage] = useState('');
   const [showSearch, setShowSearch] = useState(false);
   const [locations, setLocations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -79,9 +78,10 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
 
     const loadWeatherData = async () => {
       const { lat, lon } = location;
+      const usersWeatherUnits = await getUnits();
 
       try {
-        const weatherData = await fetchWeatherForecast(lat, lon, 'metric');
+        const weatherData = await fetchWeatherForecast(lat, lon, usersWeatherUnits);
         console.log(weatherData);
         setWeather(weatherData);
         storeData('usersLat', lat);
@@ -406,7 +406,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
             </StyledView>
 
             <StyledView className={cn(
-                'mb-5 mx-9 py-3 space-y-3 rounded-medium',
+                'mb-9 mx-9 py-3 space-y-3 rounded-medium',
                 { 'bg-light-blue/30': !timeCheck },
                 { 'bg-dark-blue/30': timeCheck },
               )}>
@@ -446,7 +446,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                           {forecastDays[forecastDaysIndex]}
                         </StyledText>
 
-                        <StyledView className={'flex-row justify-between items-center'}>
+                        <StyledView className={'flex-row justify-between items-center w-7/12'}>
                           <StyledView className={'w-7 h-7'}>
                             <Image
                               source={weatherImages[getWeatherImage(item.weather[0].description || 'else')]}
@@ -454,12 +454,12 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                             />
                           </StyledView>
 
-                          <StyledView className={'flex-row ml-20 w-container'}>
+                          <StyledView className={'flex-row'}>
                             <StyledText className={'text-lg text-white'}>
                               {Math.ceil(item.main.temp_max)}&#176;
                             </StyledText>
 
-                            <StyledText className={'text-lg text-white/50 ml-2.5'}>
+                            <StyledText className={'ml-2.5 w-full text-lg text-white/50'}>
                               {minForecastTemp}&#176;
                             </StyledText>
                           </StyledView>
