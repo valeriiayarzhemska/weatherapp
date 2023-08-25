@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Image, SafeAreaView, ScrollView } from 'react-native';
 import { RadioButton, RadioButtonProps } from 'react-native-radio-buttons-group';
@@ -9,15 +9,19 @@ import { timeCheck } from '../../constants/constants';
 import { StyledPressable, StyledText, StyledView } from '../HomeScreen';
 import { storeData } from '../../utils/asyncStorage';
 import { SettingsScreenProps } from '../../types/Settings';
+import { getUnits } from '../../utils/helpers';
 
+export const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) => {
+  const [selectedValue, setSelectedValue] = useState<string | undefined>('');
 
+  useEffect(() => {
+    const loadUnits = async () => {
+      const initialUnits = await getUnits();
+      setSelectedValue(initialUnits);
+    }
 
-export const SettingsScreen: React.FC<SettingsScreenProps> = (props) => {
-  const {
-    navigation,
-    selectedId,
-    setSelectedId,
-  } = props;
+    loadUnits();
+  }, []);
 
   const radioButtons: RadioButtonProps[] = useMemo(
     () => [
@@ -41,7 +45,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = (props) => {
   );
 
   const handleSelection = (id: string, value: string) => {
-    setSelectedId(id);
+    setSelectedValue(value);
     storeData('usersUnits', value);
   }
 
@@ -66,7 +70,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = (props) => {
         <ScrollView>
           <StyledView className={'mx-5 relative z-50'}>
             <StyledView
-              className={'flex-row justify-between items-center mt-4'}
+              className={'flex-row justify-between items-center my-4'}
             >
               <StyledPressable
                 onPress={() => navigation.push('Home')}
@@ -96,7 +100,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = (props) => {
                   {...button}
                   onPress={() => handleSelection(button.id, button.value)}
                   key={button.id}
-                  selected={button.id === selectedId}
+                  selected={button.value === selectedValue}
                   containerStyle={{ 'display': 'flex', 'gap': 5 }}
                   borderSize={1}
                   borderColor={'#2566A3'}

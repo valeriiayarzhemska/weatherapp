@@ -17,7 +17,8 @@ const Settings = () => {
 const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 const App = () => {
-  const [selectedId, setSelectedId] = useState<string | undefined>('2');
+  //const [selectedId, setSelectedId] = useState<string | undefined>('2');
+  // console.log(setSelectedId);
 
   return (
     <NavigationContainer>
@@ -33,8 +34,7 @@ const App = () => {
           options={{
             headerShown: false,
           }}
-          selectedId={selectedId}
-          setSelectedId={setSelectedId}
+          // initialParams={{ selectedId: selectedId, setSelectedId: setSelectedId }}
         />
       </RootStack.Navigator>
     </NavigationContainer>

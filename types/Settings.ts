@@ -1,8 +1,8 @@
 import { SettingsProps } from './Navigation';
 
-type RadioButtonsProps = {
+export type RadioButtonsProps = {
   selectedId: string,
-  setSelectedId: () => void,
+  setSelectedId: (value: string) => void,
 };
 
 export type SettingsScreenProps = SettingsProps & RadioButtonsProps;
