@@ -12,7 +12,6 @@ export const getDateFromString = (date: string) => {
 };
 
 export const getWeatherImage = (description: string) => {
-  console.log(description);
   const hasNightImage = nightImages.find((image) => image === description)
     ? true
     : false;
@@ -25,5 +24,5 @@ export const getWeatherImage = (description: string) => {
 export const getUnits = async () => {
   const units = await getData('usersUnits');
   
-  return units.length > 1 ? units : 'metric';
+  return units !== null ? units : 'metric';
 }

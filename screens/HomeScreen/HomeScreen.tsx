@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { debounce } from 'lodash';
 import cn from 'classnames';
-// import Animated, { FadeInRight, FadeInUp, FadeOutLeft, FadeOutUp, SlideInRight, SlideOutLeft } from 'react-native-reanimated';
 import { getData, storeData } from '../../utils/asyncStorage';
 import { getDateFromString, getUnits, getWeatherImage } from '../../utils/helpers';
 
@@ -373,7 +372,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                 {weather.list.slice(0, 9).map((item, index) => {
                   const datetimeString = item.dt_txt;                
                   const timeArray = datetimeString.split(' ')[1].split(':');
-                  const timePortion = timeArray[0] + ':' + timeArray[1];
+                  const timePortion = `${timeArray[0]}:${timeArray[1]}`;
                   const firstChild = index === 0;
 
                   return (
@@ -381,8 +380,8 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                       key={index}
                       className={cn(
                         'flex justify-center items-center space-y-7 p-3 w-container rounded-3xl',
-                        {'bg-medium-blue-bg/20 border border-border-blue': firstChild && timeCheck},
-                        {'bg-light-blue-bg/20 border border-border-blue-light': firstChild && !timeCheck},
+                        {'bg-medium-blue-bg/20 border border-br-blue': firstChild && timeCheck},
+                        {'bg-light-blue-bg/20 border border-white': firstChild && !timeCheck},
                       )}
                     >
                       <StyledText className={'text-lg text-white'}>

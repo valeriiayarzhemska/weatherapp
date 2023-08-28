@@ -8,15 +8,15 @@ module.exports = {
   theme: {
     extend: {
       width: {
-        'container': '70px',
+        'container': '72px',
       },
       colors: {
         'dark-blue': '#001026',
         'medium-blue-bg': '#2566A3',
         'light-blue': '#104084',
         'light-blue-bg': '#4899E3',
-        'border-blue': '#5096FF',
-        'border-blue-light': '#8EBBFF',
+        'br-blue': '#5096FF',
+        'br-blue-light': '#8EBBFF',
       },
       borderRadius: {
         'medium': '20px',

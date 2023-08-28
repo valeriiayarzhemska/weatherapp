@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 
 const apiKey = process.env.API_KEY;
 const baseURL = process.env.BASE_URL;

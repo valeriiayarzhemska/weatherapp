@@ -22,7 +22,7 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      <RootStack.Navigator initialRouteName='Settings'>
+      <RootStack.Navigator initialRouteName='Home'>
         <RootStack.Screen
           name='Home'
           component={HomeScreen}

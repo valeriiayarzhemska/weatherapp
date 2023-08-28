@@ -15,9 +15,11 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.test.test",
       "supportsTablet": true
     },
     "android": {
+      "bundleIdentifier": "com.test.test",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
