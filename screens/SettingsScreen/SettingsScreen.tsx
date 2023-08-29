@@ -17,7 +17,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) =>
   useEffect(() => {
     const loadUnits = async () => {
       const initialUnits = await getUnits();
-      setSelectedValue(initialUnits);
+      setSelectedValue(initialUnits.toString());
     }
 
     loadUnits();
@@ -44,7 +44,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) =>
     [],
   );
 
-  const handleSelection = (id: string, value: string) => {
+  const handleSelection = (value: string) => {
     setSelectedValue(value);
     storeData('usersUnits', value);
   }
@@ -98,7 +98,7 @@ export const SettingsScreen: React.FC<SettingsScreenProps> = ({ navigation }) =>
               {radioButtons.map((button) => (
                 <RadioButton
                   {...button}
-                  onPress={() => handleSelection(button.id, button.value)}
+                  onPress={() => handleSelection(button.value)}
                   key={button.id}
                   selected={button.value === selectedValue}
                   containerStyle={{ 'display': 'flex', 'gap': 5 }}

@@ -7,6 +7,7 @@ import { getDateFromString, getUnits, getWeatherImage } from '../../utils/helper
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
+  Platform,
   Image,
   Text,
   TextInput,
@@ -83,8 +84,8 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
         const weatherData = await fetchWeatherForecast(lat, lon, usersWeatherUnits);
         console.log(weatherData);
         setWeather(weatherData);
-        storeData('usersLat', lat);
-        storeData('usersLon', lon);
+        storeData('usersLat', lat.toString());
+        storeData('usersLon', lon.toString());
       } catch {
         setIsLoading(false);
         setHasError(true);
@@ -103,18 +104,18 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
     setIsLoading(true);
 
     const loadData = async () => {
-      const usersLat = await Number(getData('usersLat'));
-      const usersLon = await Number(getData('usersLon'));
+      const usersLat = await getData('usersLat');
+      const usersLon = await getData('usersLon');
       const usersUnits = await getUnits();
-      const latKyiv = 50.4333;
-      const lonKyiv = 30.5167;
+      const latKyiv = '50.4333';
+      const lonKyiv = '30.5167';
 
       try {
         if (usersLat && usersLon) {
           const location = await fetchWeatherForecast(
-            usersLat,
-            usersLon,
-            usersUnits,
+            usersLat.toString(),
+            usersLon.toString(),
+            usersUnits.toString(),
           );
           console.log(location);
           setWeather(location);
@@ -122,7 +123,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
           const locationKyiv = await fetchWeatherForecast(
             latKyiv,
             lonKyiv,
-            usersUnits,
+            usersUnits.toString(),
           );
 
           setWeather(locationKyiv);
@@ -183,12 +184,12 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                 {showSearch ? (
                   <StyledView
                     className={
-                      'flex-row justify-end items-center w-full rounded-full bg-white'
+                      'flex-row content-center items-center w-full h-input rounded-full bg-white'
                     }
                   >
                     <StyledPressable
                       onPress={() => setShowSearch(!showSearch)}
-                      className={'mt-1 ml-2 mb-1 p-3.5 rounded-full'}
+                      className={'flex justify-center ml-2 p-3.5 rounded-full'}
                     >
                       <Image
                         source={require('../../assets/icons/icon-back.png')}
@@ -200,8 +201,8 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                       onChangeText={handleTextDebounce}
                       placeholder='Search a city'
                       placeholderTextColor={'lightgray'}
-                      className={'pl-2 flex-1 text-lg text-black'}
-                      style={{ height: 62 }}
+                      className={'flex items-center py-0 pl-2 w-full text-lg text-black leading-middle'}
+                      // style={{ marginBottom: Platform.OS === 'ios' ? 2 : 0 }}
                     />
                   </StyledView>
                 ) : (
@@ -380,8 +381,8 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                       key={index}
                       className={cn(
                         'flex justify-center items-center space-y-7 p-3 w-container rounded-3xl',
-                        {'bg-medium-blue-bg/20 border border-br-blue': firstChild && timeCheck},
-                        {'bg-light-blue-bg/20 border border-white': firstChild && !timeCheck},
+                        {'bg-medium-blue-bg/20 border-min border-br-blue': firstChild && timeCheck},
+                        {'bg-light-blue-bg/20 border-min border-br-blue-light': firstChild && !timeCheck},
                       )}
                     >
                       <StyledText className={'text-lg text-white'}>
@@ -395,7 +396,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                         />
                       </StyledView>
 
-                      <StyledText className={'text-lg text-white'}>
+                      <StyledText className={'text-base text-white'}>
                         {timePortion}
                       </StyledText>
                     </StyledView>
@@ -439,9 +440,9 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                     return (
                       <StyledView
                         key={index}
-                        className={'flex-row justify-between items-center py-4'}
+                        className={'flex-row justify-between items-center w-full py-4'}
                       >
-                        <StyledText className={'font-bold text-lg text-white'}>
+                        <StyledText className={' font-bold text-lg text-white'}>
                           {forecastDays[forecastDaysIndex]}
                         </StyledText>
 
@@ -458,7 +459,7 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                               {Math.ceil(item.main.temp_max)}&#176;
                             </StyledText>
 
-                            <StyledText className={'ml-2.5 w-full text-lg text-white/50'}>
+                            <StyledText className={'ml-2.5 text-lg text-white/50'}>
                               {minForecastTemp}&#176;
                             </StyledText>
                           </StyledView>
