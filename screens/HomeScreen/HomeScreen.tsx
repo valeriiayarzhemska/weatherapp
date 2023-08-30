@@ -7,7 +7,6 @@ import { getDateFromString, getUnits, getWeatherImage } from '../../utils/helper
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import {
-  Platform,
   Image,
   Text,
   TextInput,
@@ -82,7 +81,6 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
 
       try {
         const weatherData = await fetchWeatherForecast(lat, lon, usersWeatherUnits);
-        console.log(weatherData);
         setWeather(weatherData);
         storeData('usersLat', lat.toString());
         storeData('usersLon', lon.toString());
@@ -117,7 +115,6 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
             usersLon.toString(),
             usersUnits.toString(),
           );
-          console.log(location);
           setWeather(location);
         } else {
           const locationKyiv = await fetchWeatherForecast(
@@ -202,7 +199,6 @@ export const HomeScreen: React.FC<HomeProps> = ({ navigation }) => {
                       placeholder='Search a city'
                       placeholderTextColor={'lightgray'}
                       className={'flex items-center py-0 pl-2 w-full text-lg text-black leading-middle'}
-                      // style={{ marginBottom: Platform.OS === 'ios' ? 2 : 0 }}
                     />
                   </StyledView>
                 ) : (
