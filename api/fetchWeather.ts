@@ -6,11 +6,6 @@ const baseURL = process.env.BASE_URL;
 const searchURL = `${baseURL}/geo/1.0/direct`;
 const findByLatLonURL = `${baseURL}/data/2.5/forecast`;
 
-export interface Coords {
-  lon: number,
-  lat: number,
-}
-
 const apiWeatherCallLatLong = async (
   lat: string,
   lon: string,
@@ -32,7 +27,7 @@ const apiWeatherCallLatLong = async (
   }
 };
 
-const apiWeatherCallCity = async (params, url) => {
+const apiWeatherCallCity = async (params, url: string) => {
   const { city, unit, limit } = params;
 
   try {
